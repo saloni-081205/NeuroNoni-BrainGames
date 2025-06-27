@@ -6,7 +6,7 @@ All rights reserved. Unauthorized use or duplication is prohibited.
 body {
   margin: 0;
   font-family: 'Press Start 2P', cursive;
-  background-image: url("images/FireBg.jpeg");
+  background-image: url("/images/FireBg.jpeg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
