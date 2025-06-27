@@ -1,0 +1,369 @@
+<!--
+© 2025 Saloni Rana | NeuroNoni Brain Games
+All rights reserved. Unauthorized use or duplication is prohibited.
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Scramble Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Press Start 2P';
+      background-image: url("images/dark.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-attachment: fixed;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      color: #e2f139;
+    }
+    h1 {
+      font-size: 2em;
+      margin: 20px;
+      color: #e2f139;
+      margin-bottom: 2px;
+      text-shadow: 4px 4px #000;
+    }
+    .game-container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: rgba(15, 3, 63, 0.5);
+      border: 4px solid #db4682;
+      border-radius: 10px;
+      height: auto;
+    }
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      font-size: 0.8em;
+    }
+    .scrambled-word {
+      font-size: 2em;
+      letter-spacing: 0.5em;
+      margin: 30px 0;
+      padding: 15px;
+      background-color: #eabde6;
+      color: #0f033f;
+      border: 3px solid #db4682;
+      border-radius: 5px;
+    }
+    input {
+      font-family: 'Press Start 2P';
+      font-size: 1.2em;
+      padding: 10px;
+      width: 80%;
+      margin: 10px 0;
+      background-color: #eabde6;
+      border: 3px solid #db4682;
+      color: #0f033f;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    button {
+      font-family: 'Press Start 2P';
+      font-size: 1em;
+      padding: 10px 20px;
+      margin: 10px 5px;
+      background-color: #e3ed1b;
+      color: #000000;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 0 0 1px #bfc816,2px 2px 0 2px #e3a335;
+    }
+    button:hover {
+      background-color: #e9f663;
+      color: #191717;
+      transform: scale(1.05);
+    }
+    .feedback {
+      font-size: 1.2em;
+      min-height: 30px;
+      margin: 20px 0;
+    }
+    .correct {
+      color: #4caf50;
+    }
+    .incorrect {
+      color: #f44336;
+    }
+    .level-up {
+      color: #FFD700;
+      animation: pulse 0.5s infinite alternate;
+    }
+    @keyframes pulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.1); }
+    }
+    .characters{
+      height: 120px;
+      width: 120px;
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #ffffff;
+      margin-bottom: 30px;
+    }
+    .timer {
+      color: #FFD700;
+    }
+    .exit-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: #e3ed1b;
+      color: #000000;
+      box-shadow: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 0 0 1px #bfc816,2px 2px 0 2px #e3a335;
+    }
+    .exit-btn:hover {
+      background-color: #e9f663;
+      color: #191717;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <!-- Exit Button to return to homepage -->
+  <button class="exit-btn" id="exit-btn">Exit</button>
+  
+  <h1>Word Scramble</h1>
+  <img class="characters" src="images/rocket.gif">
+  <div class="game-container">
+    <div class="stats">
+      <div>Level: <span id="level">1</span></div>
+      <div>Score: <span id="score">0</span></div>
+      <div>Time: <span id="timer" class="timer">60</span>s</div>
+    </div>
+    
+    <div class="scrambled-word" id="scrambled-word"></div>
+    
+    <input type="text" id="user-input" placeholder="Type your answer..." autocomplete="off">
+    
+    <div>
+      <button id="submit-btn">Submit</button>
+      <button id="hint-btn">Hint (3)</button>
+      <button id="skip-btn">Skip (3)</button>
+    </div>
+    
+    <div class="feedback" id="feedback"></div>
+  </div>
+  
+  <footer>
+    © 2025 Saloni Rana — NeuroNoni Brain Games. All rights reserved.
+  </footer>
+
+  <script>
+    // Game data with words grouped by difficulty levels
+    const wordLevels = [
+      // Level 1 - Easy (4-5 letters)
+      ["love", "star", "moon", "game", "code", "play", "pink", "bird", "fish", "tree"],
+      // Level 2 - Medium (6 letters)
+      ["planet", "rocket", "puzzle", "gaming", "joyful", "bright", "flower", "sunset", "purple", "friend"],
+      // Level 3 - Hard (7 letters)
+      ["adventure", "creative", "victory", "rainbow", "champion", "mystery", "treasure", "fantasy", "wonder", "delight"],
+      // Level 4 - Very Hard (8+ letters)
+      ["imagination", "happiness", "brilliant", "wonderful", "excellent", "beautiful", "sparkling", "glorious", "colorful", "magnificent"]
+    ];
+    
+    // Game variables
+    let currentLevel = 0;
+    let score = 0;
+    let timeLeft = 60;
+    let timer;
+    let currentWord = "";
+    let scrambledWord = "";
+    let hintsLeft = 3;
+    let skipsLeft = 3;
+    let wordsSolved = 0;
+    
+    // DOM elements
+    const scrambledWordEl = document.getElementById("scrambled-word");
+    const userInputEl = document.getElementById("user-input");
+    const feedbackEl = document.getElementById("feedback");
+    const levelEl = document.getElementById("level");
+    const scoreEl = document.getElementById("score");
+    const timerEl = document.getElementById("timer");
+    const submitBtn = document.getElementById("submit-btn");
+    const hintBtn = document.getElementById("hint-btn");
+    const skipBtn = document.getElementById("skip-btn");
+    const exitBtn = document.getElementById("exit-btn");
+    
+    // Initialize game
+    initGame();
+    
+    // Event listeners
+    submitBtn.addEventListener("click", checkAnswer);
+    hintBtn.addEventListener("click", giveHint);
+    skipBtn.addEventListener("click", skipWord);
+    exitBtn.addEventListener("click", exitToHomepage);
+    userInputEl.addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        checkAnswer();
+      }
+    });
+    
+    // Exit to homepage function
+    function exitToHomepage() {
+      // Replace this with your actual homepage URL
+      window.location.href = "index.html";
+    }
+    
+    // Game functions
+    function initGame() {
+      // Reset game state for new level
+      wordsSolved = 0;
+      updateLevelDisplay();
+      startTimer();
+      getNewWord();
+    }
+    
+    function getNewWord() {
+      // Get a random word from current level
+      const levelWords = wordLevels[currentLevel];
+      currentWord = levelWords[Math.floor(Math.random() * levelWords.length)];
+      
+      // Scramble the word
+      scrambledWord = scrambleWord(currentWord);
+      scrambledWordEl.textContent = scrambledWord;
+      
+      // Clear input and feedback
+      userInputEl.value = "";
+      feedbackEl.textContent = "";
+      feedbackEl.className = "feedback";
+      
+      // Focus on input
+      userInputEl.focus();
+    }
+    
+    function scrambleWord(word) {
+      let letters = word.split('');
+      for (let i = letters.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [letters[i], letters[j]] = [letters[j], letters[i]];
+      }
+      return letters.join('');
+    }
+    
+    function checkAnswer() {
+      const userAnswer = userInputEl.value.trim().toLowerCase();
+      
+      if (userAnswer === currentWord) {
+        // Correct answer
+        score += (currentLevel + 1) * 10;
+        wordsSolved++;
+        feedbackEl.textContent = "Correct!";
+        feedbackEl.className = "feedback correct";
+        
+        // Check if player should level up (solve 3 words to level up)
+        if (wordsSolved >= 3 && currentLevel < wordLevels.length - 1) {
+          levelUp();
+        } else {
+          setTimeout(getNewWord, 1000);
+        }
+      } else {
+        // Incorrect answer
+        feedbackEl.textContent = "Wrong! Try again.";
+        feedbackEl.className = "feedback incorrect";
+      }
+      
+      updateScoreDisplay();
+    }
+    
+    function levelUp() {
+      currentLevel++;
+      wordsSolved = 0;
+      feedbackEl.textContent = `Level ${currentLevel + 1} Unlocked!`;
+      feedbackEl.className = "feedback level-up";
+      updateLevelDisplay();
+      
+      setTimeout(() => {
+        feedbackEl.className = "feedback";
+        getNewWord();
+      }, 2000);
+    }
+    
+    function giveHint() {
+      if (hintsLeft <= 0) {
+        feedbackEl.textContent = "No hints left!";
+        feedbackEl.className = "feedback incorrect";
+        return;
+      }
+      
+      hintsLeft--;
+      hintBtn.textContent = `Hint (${hintsLeft})`;
+      
+      // Reveal one letter in the correct position
+      for (let i = 0; i < currentWord.length; i++) {
+        if (scrambledWord[i] !== currentWord[i]) {
+          const scrambledArr = scrambledWord.split('');
+          scrambledArr[i] = currentWord[i];
+          scrambledWord = scrambledArr.join('');
+          scrambledWordEl.textContent = scrambledWord;
+          break;
+        }
+      }
+    }
+    
+    function skipWord() {
+      if (skipsLeft <= 0) {
+        feedbackEl.textContent = "No skips left!";
+        feedbackEl.className = "feedback incorrect";
+        return;
+      }
+      
+      skipsLeft--;
+      skipBtn.textContent = `Skip (${skipsLeft})`;
+      getNewWord();
+    }
+    
+    function startTimer() {
+      clearInterval(timer);
+      timeLeft = 60;
+      timerEl.textContent = timeLeft;
+      
+      timer = setInterval(() => {
+        timeLeft--;
+        timerEl.textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+    
+    function endGame() {
+      clearInterval(timer);
+      scrambledWordEl.textContent = "Game Over!";
+      userInputEl.disabled = true;
+      submitBtn.disabled = true;
+      hintBtn.disabled = true;
+      skipBtn.disabled = true;
+      
+      feedbackEl.textContent = `Final Score: ${score}`;
+      feedbackEl.className = "feedback level-up";
+    }
+    
+    function updateLevelDisplay() {
+      levelEl.textContent = currentLevel + 1;
+    }
+    
+    function updateScoreDisplay() {
+      scoreEl.textContent = score;
+    }
+  </script>
+</body>
+</html>

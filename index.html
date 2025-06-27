@@ -1,0 +1,156 @@
+<!--
+© 2025 Saloni Rana | NeuroNoni Brain Games
+All rights reserved. Unauthorized use or duplication is prohibited.
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Brain Games Website</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/BrainGames.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <div class="logo-icon">
+        <img src="images/logo.png">
+      </div>
+      NeuroNoni
+    </div>
+      <button class="signup-btn" id="signupBtn">Sign Up</button>
+  </header>
+
+  <main class="content-wrapper">
+    <div id="signupModal" class="modal">
+      <div class="modal-content">
+          <span class="close-btn" id="closeModal">&times;</span>
+          <h2>SIGN UP</h2>
+          <form class="signup-form" id="signupForm">
+            <input type="text" placeholder="Username" required>
+            <input type="email" placeholder="Email" required>
+            <input type="password" placeholder="Password" required>
+            <button type="submit">Create Account</button>
+          </form>
+      </div>
+    </div>
+
+      <div class="hero-text">
+        <h1 class="floating-title">
+          Your<br>Game Quest
+        </h1>
+        <p class="hero-subtitle">Challenge your brain with fun retro games ⋆˙⟡</p>
+      </div>
+
+
+    <div class="games-section">
+      <a href="MemoryMatcher.html">
+        <div class="one" id="one">
+          <img src="images/bg5.gif">
+          <p class="game">GAME</p>
+          <p class="game-name">Memory Match Game</p>
+          <p class="game-description">Test your memory by flipping cards to match identical pairs. A fun and challenging way to sharpen your focus and recall.
+          </p>
+        </div>
+      </a>
+      
+      <a href="WordScramble.html">
+        <div class="one" id="two">
+          <img src="images/bg2.gif">
+          <p class="game">GAME</p>
+          <p class="game-name">Word Scramble</p>
+          <p class="game-description">Unscramble the letters to form words. Perfect for building vocabulary and improving cognitive agility.</p>
+        </div>
+      </a>
+      
+      <a href="NumberPuzzle.html">
+        <div class="one" id="three">
+          <img src="images/waterfall.gif">
+          <p class="game">GAME</p>
+          <p class="game-name">Number Puzzle</p>
+          <p class="game-description">Solve basic math puzzles and number patterns. Boost your problem-solving and arithmetic skills.</p>
+      </div>
+      </a>
+      
+      <a href="ReactionTimeTest.html">
+        <div class="one" id="three">
+          <img src="images/rainfall.gif">
+          <p class="game">GAME</p>
+          <p class="game-name">Reaction Time Test</p>
+          <p class="game-description">Click as quickly as possible when the screen changes. Great for improving reflexes and hand-eye coordination.</p>
+      </div>
+      </a>
+    </div>
+
+    <section class="cta-section">
+      <div class="cta-content">
+        <h1>Game On,<br><br> Brain!</h1><br>
+        <p class="typewriter-text">All the Best !!!</p>
+      </div>
+    </section>
+
+    <div class="characters-box">
+      <img class="characters" src="images/DancingCharacters.gif">
+    </div>
+
+  </main>
+  
+
+  <footer class="pixel-footer">
+  <div class="footer-content">
+    <p id="footer-text">NeuroNoni Created with <img id="heart" src="
+    images/heart.webp"> by Saloni</p>
+    <p>You Can Follow Saloni On</p>
+    <div class="social-icons">
+      <a href="https://www.instagram.com/saloni_081205" target="_blank">
+        <img src="images/instagram.jpg">
+      </a>
+      <a href="https://www.linkedin.com/in/saloni-rana-539a4436a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank">
+        <img src="images/LinkedIn.webp">
+      </a>
+    </div>
+  </div>
+</footer>
+
+ <script>
+    // Sign Up Modal Functionality
+    const signupBtn = document.getElementById('signupBtn');
+    const signupModal = document.getElementById('signupModal');
+    const closeModal = document.getElementById('closeModal');
+    const signupForm = document.getElementById('signupForm');
+
+    // Open modal when Sign Up button is clicked
+    signupBtn.addEventListener('click', () => {
+      signupModal.style.display = 'block';
+    });
+
+    // Close modal when X is clicked
+    closeModal.addEventListener('click', () => {
+      signupModal.style.display = 'none';
+    });
+
+    // Close modal when clicking outside the modal content
+    window.addEventListener('click', (event) => {
+      if (event.target === signupModal) {
+        signupModal.style.display = 'none';
+      }
+    });
+
+    // Handle form submission
+    signupForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Get form values
+      const username = signupForm.elements[0].value;
+      const email = signupForm.elements[1].value;
+      
+      alert(`Account created for ${username}! Welcome to NeuroNoni!`);
+      signupModal.style.display = 'none';
+      signupForm.reset();
+      
+    });
+  </script>
+</body>
+</html>

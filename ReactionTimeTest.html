@@ -1,0 +1,410 @@
+<!--
+© 2025 Saloni Rana | NeuroNoni Brain Games
+All rights reserved. Unauthorized use or duplication is prohibited.
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reaction Time Test</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Press Start 2P';
+      background-image: url("images/dark.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-attachment: fixed;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      color: #e2f139;
+    }
+    h1 {
+      font-size: 2em;
+      margin: 20px;
+      color: #e2f139;
+      margin-bottom: 2px;
+      text-shadow: 4px 4px #000;
+    }
+    .game-container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: rgba(15, 3, 63, 0.5);
+      border: 4px solid #db4682;
+      border-radius: 10px;
+      height: auto;
+    }
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      font-size: 0.8em;
+    }
+    .reaction-area {
+      height: 300px;
+      margin: 30px 0;
+      padding: 15px;
+      background-color: #0f033f;
+      color: #e2f139;
+      border: 3px solid #db4682;
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .reaction-area.waiting {
+      background-color: #0f033f;
+    }
+    .reaction-area.ready {
+      background-color: #eabde6;
+      color: #0f033f;
+    }
+    .reaction-area.go {
+      background-color: #4caf50;
+      color: #ffffff;
+    }
+    .reaction-message {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+    }
+    .reaction-time {
+      font-size: 2em;
+      margin: 20px 0;
+    }
+    button {
+      font-family: 'Press Start 2P';
+      font-size: 1em;
+      padding: 10px 20px;
+      margin: 10px 5px;
+      background-color: #e3ed1b;
+      color: #000000;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 0 0 1px #bfc816, 2px 2px 0 2px #e3a335;
+    }
+    button:hover {
+      background-color: #e9f663;
+      color: #191717;
+      transform: scale(1.05);
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .feedback {
+      font-size: 1.2em;
+      min-height: 30px;
+      margin: 20px 0;
+    }
+    .characters {
+      height: 120px;
+      width: 120px;
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #ffffff;
+      margin-bottom: 30px;
+    }
+    .exit-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: #e3ed1b;
+      color: #000000;
+      box-shadow: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 0 0 1px #bfc816, 2px 2px 0 2px #e3a335;
+    }
+    .exit-btn:hover {
+      background-color: #e9f663;
+      color: #191717;
+      transform: scale(1.05);
+    }
+    .best-time {
+      color: #FFD700;
+      font-size: 1.2em;
+      margin: 10px 0;
+    }
+    .attempts {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    .attempt-dot {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background-color: #db4682;
+    }
+    .attempt-dot.fast {
+      background-color: #4caf50;
+    }
+    .attempt-dot.slow {
+      background-color: #f44336;
+    }
+  </style>
+</head>
+<body>
+  <!-- Exit Button to return to homepage -->
+  <button class="exit-btn" id="exit-btn">Exit</button>
+  
+  <h1>Reaction Time Test</h1>
+  <img class="characters" src="images/rocket.gif">
+  <div class="game-container">
+    <div class="stats">
+      <div>Round: <span id="round">1</span>/5</div>
+      <div>Best: <span id="best-time" class="best-time">--</span>ms</div>
+      <div>Average: <span id="average-time">--</span>ms</div>
+    </div>
+    
+    <div class="attempts" id="attempts"></div>
+    
+    <div class="reaction-area waiting" id="reaction-area">
+      <div class="reaction-message" id="reaction-message">Click to Start Test</div>
+      <div class="reaction-time" id="reaction-time"></div>
+    </div>
+    
+    <div class="feedback" id="feedback"></div>
+    
+    <div>
+      <button id="start-btn">Start Test</button>
+      <button id="reset-btn">Reset</button>
+    </div>
+  </div>
+  
+  <footer>
+    © 2025 Saloni Rana — NeuroNoni Brain Games. All rights reserved.
+  </footer>
+
+  <script>
+    // Game variables
+    let testActive = false;
+    let startTime = 0;
+    let reactionTimes = [];
+    let currentRound = 0;
+    let timeoutId = null;
+    let bestTime = Infinity;
+    
+    // DOM elements
+    const reactionArea = document.getElementById("reaction-area");
+    const reactionMessage = document.getElementById("reaction-message");
+    const reactionTimeEl = document.getElementById("reaction-time");
+    const roundEl = document.getElementById("round");
+    const bestTimeEl = document.getElementById("best-time");
+    const averageTimeEl = document.getElementById("average-time");
+    const feedbackEl = document.getElementById("feedback");
+    const startBtn = document.getElementById("start-btn");
+    const resetBtn = document.getElementById("reset-btn");
+    const exitBtn = document.getElementById("exit-btn");
+    const attemptsEl = document.getElementById("attempts");
+    
+    // Initialize game
+    initGame();
+    
+    // Event listeners
+    reactionArea.addEventListener("click", handleReactionClick);
+    startBtn.addEventListener("click", startTest);
+    resetBtn.addEventListener("click", resetTest);
+    exitBtn.addEventListener("click", exitToHomepage);
+    
+    // Exit to homepage function
+    function exitToHomepage() {
+      window.location.href = "index.html";
+    }
+    
+    // Game functions
+    function initGame() {
+      updateStats();
+      createAttemptDots();
+    }
+    
+    function createAttemptDots() {
+      attemptsEl.innerHTML = "";
+      for (let i = 0; i < 5; i++) {
+        const dot = document.createElement("div");
+        dot.classList.add("attempt-dot");
+        attemptsEl.appendChild(dot);
+      }
+    }
+    
+    function startTest() {
+      if (testActive) return;
+      
+      testActive = true;
+      currentRound = 0;
+      reactionTimes = [];
+      startBtn.disabled = true;
+      resetBtn.disabled = true;
+      feedbackEl.textContent = "";
+      reactionTimeEl.textContent = "";
+      updateAttemptDots();
+      
+      startRound();
+    }
+    
+    function startRound() {
+      if (currentRound >= 5) {
+        endTest();
+        return;
+      }
+      
+      reactionArea.classList.remove("go", "ready");
+      reactionArea.classList.add("waiting");
+      reactionMessage.textContent = "Wait for it...";
+      
+      // Random delay between 1-5 seconds
+      const delay = 1000 + Math.random() * 4000;
+      
+      timeoutId = setTimeout(() => {
+        reactionArea.classList.remove("waiting");
+        reactionArea.classList.add("ready");
+        reactionMessage.textContent = "Get Ready...";
+        
+        setTimeout(() => {
+          if (!testActive) return;
+          
+          reactionArea.classList.remove("ready");
+          reactionArea.classList.add("go");
+          reactionMessage.textContent = "CLICK NOW!";
+          startTime = Date.now();
+        }, 500);
+      }, delay);
+    }
+    
+    function handleReactionClick() {
+      if (!testActive) {
+        startTest();
+        return;
+      }
+      
+      if (reactionArea.classList.contains("go")) {
+        // Valid click
+        const reactionTime = Date.now() - startTime;
+        reactionTimes.push(reactionTime);
+        currentRound++;
+        
+        // Update best time
+        if (reactionTime < bestTime) {
+          bestTime = reactionTime;
+        }
+        
+        reactionTimeEl.textContent = `${reactionTime}ms`;
+        updateStats();
+        updateAttemptDots();
+        
+        // Visual feedback
+        if (reactionTime < 250) {
+          feedbackEl.textContent = "Lightning Fast! ⚡";
+          feedbackEl.className = "feedback correct";
+        } else if (reactionTime < 400) {
+          feedbackEl.textContent = "Great Reaction!";
+          feedbackEl.className = "feedback correct";
+        } else {
+          feedbackEl.textContent = "Too Slow!";
+          feedbackEl.className = "feedback incorrect";
+        }
+        
+        // Start next round after delay
+        setTimeout(startRound, 1500);
+      } else if (reactionArea.classList.contains("ready") || reactionArea.classList.contains("waiting")) {
+        // Clicked too early
+        feedbackEl.textContent = "Too Early! Wait for GREEN";
+        feedbackEl.className = "feedback incorrect";
+        reactionTimes.push(null); // Mark as failed attempt
+        currentRound++;
+        updateAttemptDots();
+        
+        // Start next round after delay
+        setTimeout(startRound, 1500);
+      }
+    }
+    
+    function updateStats() {
+      roundEl.textContent = `${currentRound}/5`;
+      
+      if (bestTime !== Infinity) {
+        bestTimeEl.textContent = bestTime;
+      }
+      
+      // Calculate average of successful attempts
+      const successfulAttempts = reactionTimes.filter(time => time !== null);
+      if (successfulAttempts.length > 0) {
+        const average = Math.round(successfulAttempts.reduce((a, b) => a + b, 0) / successfulAttempts.length);
+        averageTimeEl.textContent = average;
+      } else {
+        averageTimeEl.textContent = "--";
+      }
+    }
+    
+    function updateAttemptDots() {
+      const dots = Array.from(attemptsEl.children);
+      dots.forEach((dot, index) => {
+        dot.className = "attempt-dot";
+        
+        if (index < currentRound) {
+          if (reactionTimes[index] === null) {
+            dot.classList.add("slow");
+          } else if (reactionTimes[index] < 300) {
+            dot.classList.add("fast");
+          } else {
+            dot.classList.add("slow");
+          }
+        }
+      });
+    }
+    
+    function endTest() {
+      testActive = false;
+      reactionArea.classList.remove("go", "ready");
+      reactionArea.classList.add("waiting");
+      reactionMessage.textContent = "Test Complete!";
+      startBtn.disabled = false;
+      resetBtn.disabled = false;
+      
+      // Show final feedback
+      const successfulAttempts = reactionTimes.filter(time => time !== null);
+      if (successfulAttempts.length > 0) {
+        const average = Math.round(successfulAttempts.reduce((a, b) => a + b, 0) / successfulAttempts.length);
+        feedbackEl.textContent = `Average: ${average}ms | Best: ${bestTime}ms`;
+        feedbackEl.className = "feedback";
+      } else {
+        feedbackEl.textContent = "No valid attempts! Try again";
+        feedbackEl.className = "feedback incorrect";
+      }
+    }
+    
+    function resetTest() {
+      clearTimeout(timeoutId);
+      testActive = false;
+      reactionTimes = [];
+      currentRound = 0;
+      bestTime = Infinity;
+      startBtn.disabled = false;
+      resetBtn.disabled = false;
+      
+      reactionArea.classList.remove("go", "ready");
+      reactionArea.classList.add("waiting");
+      reactionMessage.textContent = "Click to Start Test";
+      reactionTimeEl.textContent = "";
+      feedbackEl.textContent = "";
+      
+      updateStats();
+      updateAttemptDots();
+    }
+  </script>
+</body>
+</html>

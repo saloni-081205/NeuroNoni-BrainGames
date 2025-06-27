@@ -1,0 +1,438 @@
+<!--
+© 2025 Saloni Rana | NeuroNoni Brain Games
+All rights reserved. Unauthorized use or duplication is prohibited.
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number Puzzle Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Press Start 2P';
+      background-image: url("images/dark.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-attachment: fixed;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      color: #e2f139;
+    }
+    h1 {
+      font-size: 2em;
+      margin: 20px;
+      color: #e2f139;
+      margin-bottom: 2px;
+      text-shadow: 4px 4px #000;
+    }
+    .game-container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: rgba(15, 3, 63, 0.5);
+      border: 4px solid #db4682;
+      border-radius: 10px;
+      height: auto;
+    }
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      font-size: 0.8em;
+    }
+    .puzzle-container {
+      font-size: 1.5em;
+      margin: 30px 0;
+      padding: 15px;
+      background-color: #eabde6;
+      color: #0f033f;
+      border: 3px solid #db4682;
+      border-radius: 5px;
+      min-height: 100px;
+    }
+    .puzzle-question {
+      margin-bottom: 20px;
+    }
+    .puzzle-options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .option-btn {
+      font-family: 'Press Start 2P';
+      font-size: 1em;
+      padding: 10px 15px;
+      background-color: #e3ed1b;
+      color: #000000;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 0 0 1px #bfc816, 2px 2px 0 2px #e3a335;
+    }
+    .option-btn:hover {
+      background-color: #e9f663;
+      color: #191717;
+      transform: scale(1.05);
+    }
+    input {
+      font-family: 'Press Start 2P';
+      font-size: 1.2em;
+      padding: 10px;
+      width: 80%;
+      margin: 10px 0;
+      background-color: #eabde6;
+      border: 3px solid #db4682;
+      color: #0f033f;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    button {
+      font-family: 'Press Start 2P';
+      font-size: 1em;
+      padding: 10px 20px;
+      margin: 10px 5px;
+      background-color: #e3ed1b;
+      color: #000000;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 0 0 1px #bfc816, 2px 2px 0 2px #e3a335;
+    }
+    button:hover {
+      background-color: #e9f663;
+      color: #191717;
+      transform: scale(1.05);
+    }
+    .feedback {
+      font-size: 1.2em;
+      min-height: 30px;
+      margin: 20px 0;
+    }
+    .correct {
+      color: #4caf50;
+    }
+    .incorrect {
+      color: #f44336;
+    }
+    .level-up {
+      color: #FFD700;
+      animation: pulse 0.5s infinite alternate;
+    }
+    @keyframes pulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.1); }
+    }
+    .characters {
+      height: 120px;
+      width: 120px;
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #ffffff;
+      margin-bottom: 30px;
+    }
+    .timer {
+      color: #FFD700;
+    }
+    .exit-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: #e3ed1b;
+      color: #000000;
+      box-shadow: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 0 0 1px #bfc816, 2px 2px 0 2px #e3a335;
+    }
+    .exit-btn:hover {
+      background-color: #e9f663;
+      color: #191717;
+      transform: scale(1.05);
+    }
+    .number-sequence {
+      font-size: 1.5em;
+      letter-spacing: 0.2em;
+      margin: 10px 0;
+    }
+    .math-equation {
+      font-size: 1.8em;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Exit Button to return to homepage -->
+  <button class="exit-btn" id="exit-btn">Exit</button>
+  
+  <h1>Number Puzzle</h1>
+  <img class="characters" src="images/rocket.gif">
+  <div class="game-container">
+    <div class="stats">
+      <div>Level: <span id="level">1</span></div>
+      <div>Score: <span id="score">0</span></div>
+      <div>Time: <span id="timer" class="timer">60</span>s</div>
+    </div>
+    
+    <div class="puzzle-container" id="puzzle-container">
+      <div class="puzzle-question" id="question"></div>
+      <div class="puzzle-options" id="options"></div>
+    </div>
+    
+    <div class="feedback" id="feedback"></div>
+    
+    <div>
+      <button id="hint-btn">Hint (3)</button>
+      <button id="skip-btn">Skip (3)</button>
+    </div>
+  </div>
+  
+  <footer>
+    © 2025 Saloni Rana — NeuroNoni Brain Games. All rights reserved.
+  </footer>
+
+  <script>
+    // Game data with puzzles grouped by difficulty levels
+    const puzzleLevels = [
+      // Level 1 - Easy (Basic arithmetic)
+      [
+        { type: "math", question: "5 + 7 = ?", answer: "12", options: ["10", "12", "14", "11"] },
+        { type: "math", question: "9 - 3 = ?", answer: "6", options: ["5", "6", "7", "12"] },
+        { type: "sequence", question: "2, 4, 6, ?", answer: "8", options: ["7", "8", "10", "12"] },
+        { type: "sequence", question: "1, 3, 5, ?", answer: "7", options: ["6", "7", "8", "9"] }
+      ],
+      // Level 2 - Medium (More complex math)
+      [
+        { type: "math", question: "12 × 3 = ?", answer: "36", options: ["24", "36", "15", "48"] },
+        { type: "math", question: "28 ÷ 4 = ?", answer: "7", options: ["6", "7", "8", "9"] },
+        { type: "sequence", question: "3, 6, 9, ?", answer: "12", options: ["10", "12", "15", "18"] },
+        { type: "sequence", question: "1, 4, 9, ?", answer: "16", options: ["12", "14", "16", "25"] }
+      ],
+      // Level 3 - Hard (Advanced patterns and operations)
+      [
+        { type: "math", question: "15 + 23 = ?", answer: "38", options: ["35", "38", "42", "48"] },
+        { type: "math", question: "7 × 8 = ?", answer: "56", options: ["48", "56", "64", "72"] },
+        { type: "sequence", question: "1, 1, 2, 3, 5, ?", answer: "8", options: ["6", "7", "8", "9"] },
+        { type: "sequence", question: "2, 5, 10, 17, ?", answer: "26", options: ["22", "24", "26", "28"] }
+      ],
+      // Level 4 - Expert (Complex patterns and multi-step problems)
+      [
+        { type: "math", question: "(12 × 3) + 5 = ?", answer: "41", options: ["36", "41", "45", "51"] },
+        { type: "math", question: "50 - (12 × 3) = ?", answer: "14", options: ["12", "14", "16", "18"] },
+        { type: "sequence", question: "1, 3, 7, 15, ?", answer: "31", options: ["23", "27", "31", "35"] },
+        { type: "sequence", question: "1, 4, 9, 16, 25, ?", answer: "36", options: ["30", "36", "42", "49"] }
+      ]
+    ];
+    
+    // Game variables
+    let currentLevel = 0;
+    let score = 0;
+    let timeLeft = 60;
+    let timer;
+    let currentPuzzle = null;
+    let hintsLeft = 3;
+    let skipsLeft = 3;
+    let puzzlesSolved = 0;
+    
+    // DOM elements
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const feedbackEl = document.getElementById("feedback");
+    const levelEl = document.getElementById("level");
+    const scoreEl = document.getElementById("score");
+    const timerEl = document.getElementById("timer");
+    const hintBtn = document.getElementById("hint-btn");
+    const skipBtn = document.getElementById("skip-btn");
+    const exitBtn = document.getElementById("exit-btn");
+    
+    // Initialize game
+    initGame();
+    
+    // Event listeners
+    hintBtn.addEventListener("click", giveHint);
+    skipBtn.addEventListener("click", skipPuzzle);
+    exitBtn.addEventListener("click", exitToHomepage);
+    
+    // Exit to homepage function
+    function exitToHomepage() {
+      window.location.href = "index.html";
+    }
+    
+    // Game functions
+    function initGame() {
+      // Reset game state for new level
+      puzzlesSolved = 0;
+      updateLevelDisplay();
+      startTimer();
+      getNewPuzzle();
+    }
+    
+    function getNewPuzzle() {
+      // Get a random puzzle from current level
+      const levelPuzzles = puzzleLevels[currentLevel];
+      currentPuzzle = levelPuzzles[Math.floor(Math.random() * levelPuzzles.length)];
+      
+      // Display the puzzle
+      displayPuzzle(currentPuzzle);
+      
+      // Clear feedback
+      feedbackEl.textContent = "";
+      feedbackEl.className = "feedback";
+    }
+    
+    function displayPuzzle(puzzle) {
+      // Clear previous options
+      optionsEl.innerHTML = "";
+      
+      if (puzzle.type === "math") {
+        questionEl.innerHTML = `<div class="math-equation">${puzzle.question}</div>`;
+      } else if (puzzle.type === "sequence") {
+        questionEl.innerHTML = `<div>Complete the sequence:</div><div class="number-sequence">${puzzle.question}</div>`;
+      }
+      
+      // Shuffle options and create buttons
+      const shuffledOptions = [...puzzle.options];
+      shuffle(shuffledOptions);
+      
+      shuffledOptions.forEach(option => {
+        const optionBtn = document.createElement("button");
+        optionBtn.classList.add("option-btn");
+        optionBtn.textContent = option;
+        optionBtn.addEventListener("click", () => checkAnswer(option, puzzle.answer));
+        optionsEl.appendChild(optionBtn);
+      });
+    }
+    
+    function checkAnswer(selectedAnswer, correctAnswer) {
+      if (selectedAnswer === correctAnswer) {
+        // Correct answer
+        score += (currentLevel + 1) * 15;
+        puzzlesSolved++;
+        feedbackEl.textContent = "Correct!";
+        feedbackEl.className = "feedback correct";
+        
+        // Check if player should level up (solve 3 puzzles to level up)
+        if (puzzlesSolved >= 3 && currentLevel < puzzleLevels.length - 1) {
+          levelUp();
+        } else {
+          setTimeout(getNewPuzzle, 1000);
+        }
+      } else {
+        // Incorrect answer
+        score = Math.max(0, score - 5);
+        feedbackEl.textContent = "Wrong! Try again.";
+        feedbackEl.className = "feedback incorrect";
+      }
+      
+      updateScoreDisplay();
+    }
+    
+    function levelUp() {
+      currentLevel++;
+      puzzlesSolved = 0;
+      feedbackEl.textContent = `Level ${currentLevel + 1} Unlocked!`;
+      feedbackEl.className = "feedback level-up";
+      updateLevelDisplay();
+      
+      setTimeout(() => {
+        feedbackEl.className = "feedback";
+        getNewPuzzle();
+      }, 2000);
+    }
+    
+    function giveHint() {
+      if (hintsLeft <= 0) {
+        feedbackEl.textContent = "No hints left!";
+        feedbackEl.className = "feedback incorrect";
+        return;
+      }
+      
+      hintsLeft--;
+      hintBtn.textContent = `Hint (${hintsLeft})`;
+      
+      // Highlight the correct answer
+      const options = Array.from(optionsEl.children);
+      const correctOption = options.find(option => 
+        option.textContent === currentPuzzle.answer
+      );
+      
+      if (correctOption) {
+        correctOption.style.backgroundColor = "#4caf50";
+        correctOption.style.color = "#ffffff";
+        
+        // Reset after 1 second
+        setTimeout(() => {
+          correctOption.style.backgroundColor = "#e3ed1b";
+          correctOption.style.color = "#000000";
+        }, 1000);
+      }
+    }
+    
+    function skipPuzzle() {
+      if (skipsLeft <= 0) {
+        feedbackEl.textContent = "No skips left!";
+        feedbackEl.className = "feedback incorrect";
+        return;
+      }
+      
+      skipsLeft--;
+      skipBtn.textContent = `Skip (${skipsLeft})`;
+      getNewPuzzle();
+    }
+    
+    function startTimer() {
+      clearInterval(timer);
+      timeLeft = 60;
+      timerEl.textContent = timeLeft;
+      
+      timer = setInterval(() => {
+        timeLeft--;
+        timerEl.textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+    
+    function endGame() {
+      clearInterval(timer);
+      questionEl.textContent = "Game Over!";
+      optionsEl.innerHTML = "";
+      
+      feedbackEl.textContent = `Final Score: ${score}`;
+      feedbackEl.className = "feedback level-up";
+      
+      // Disable buttons
+      hintBtn.disabled = true;
+      skipBtn.disabled = true;
+    }
+    
+    function updateLevelDisplay() {
+      levelEl.textContent = currentLevel + 1;
+    }
+    
+    function updateScoreDisplay() {
+      scoreEl.textContent = score;
+    }
+    
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+  </script>
+</body>
+</html>

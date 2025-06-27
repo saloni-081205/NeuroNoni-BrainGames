@@ -1,0 +1,341 @@
+/*
+© 2025 Saloni Rana | NeuroNoni Brain Games
+All rights reserved. Unauthorized use or duplication is prohibited.
+*/
+
+body {
+  margin: 0;
+  font-family: 'Press Start 2P', cursive;
+  background-image: url("images/FireBg.jpeg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  min-height: 100vh; /* Ensure body takes at least full viewport height */
+  display: flex;
+  flex-direction: column; /* This helps with footer positioning */
+}
+
+    header {
+      background-color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      border-bottom: 4px solid #FFD700;
+      color:#fff;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+    }
+
+    .logo-icon img{
+      width: 50px;
+      height: 30px;
+      margin-right: 10px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 15px;
+      font-size: 10px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+    
+    .modal-content {
+      background-color: rgba(9, 2, 52, 0.9);
+      margin: auto;
+      padding: 30px;
+      border: 4px solid #db4682;
+      border-radius: 10px;
+      width: auto;
+      max-width: 400px;
+      color: #e2f139;
+      font-family: 'Press Start 2P';
+      text-align: center;
+      position: relative;
+    }
+    
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: #e2f139;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    
+    .signup-form input {
+      width: 350px;
+      padding: 10px;
+      margin: 10px 0;
+      margin-right: 10px;
+      background-color: #eabde6;
+      border: 3px solid #db4682;
+      color: #0f033f;
+      font-family: 'Press Start 2P';
+    }
+    
+    .signup-form button {
+      background-color: #e3ed1b;
+      color: #000000;
+      padding: 10px 20px;
+      margin-top: 15px;
+      border: 2px solid #f4ad33;
+      font-family: 'Press Start 2P';
+      cursor: pointer;
+      transition: transform 0.1s ease;
+      box-shadow: 0 0 0 1px #d89218,2px 1px 0 1px #ab710d;
+      text-shadow :#dabe1f 0px 2px 0px;
+    }
+    
+    .signup-form button:hover {
+      background-color: #e9f663;
+      transform: translate(-2px);
+      color:#000;
+    }
+
+    .signup-btn {
+      font-family:"Press Start 2P",monospace;
+      background-color: #FFD700;
+      color: #000;
+      padding: 10px 20px;
+      border: 2px solid #f4ad33;
+      font-size: 11px;
+      cursor: pointer;
+      border-radius: 2px;
+      box-shadow: 0 0 0 1px #d89218,2px 1px 0 1px #ab710d;
+      box-sizing :border-box;
+      text-shadow :#dabe1f 0px 2px 0px;
+      transition: transform 0.1s ease;
+      margin-right: 100px;
+    }
+
+    .signup-btn:hover {
+      background-color: #f1dc63;
+      transform: translate(-2px);
+      color:#000;
+    }
+
+    .hero-text {
+    text-align: center;
+    margin-top: 100px;
+    font-family: 'Press Start 2P', monospace;
+    }
+
+.floating-title {
+  font-size: 40px;
+  color: #FFD700;
+  text-shadow: 4px 4px #000;
+  animation: float 3s ease-in-out infinite;
+  line-height: 1.4;
+}
+
+.hero-subtitle {
+  font-size: 20px;
+  margin-top: 20px;
+  color: #000000;
+  font-weight: 500;
+  font-family: 'Roboto';
+  text-shadow: 0.5px 0.5px #000;
+}
+
+/* Floating animation keyframes */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+
+    .games-section{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      column-gap: 16px;
+      margin-top: 100px;
+      row-gap: 16px;
+    }
+
+    .games-section a{
+      text-decoration: none;
+      color: inherit;
+    }
+    .games-section a:hover,
+    .games-section a:visited,
+    .games-section a:active,
+    .games-section a:focus{
+      text-decoration: none;
+      color: inherit;
+    }
+    .one:hover{
+      background-color: #262424;
+    }
+
+    @media(max-width:750px){
+      .games-section{
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media(min-width:751px) and (max-width:999px){
+      .games-section{
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+    }
+
+    @media(min-width:1000px){
+      .games-section{
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+      }
+    }
+
+    .one{
+      height: 350px;
+      background-color: rgb(12, 12, 12);
+      border: 2px solid #161515;
+      border-radius: 5px;
+      box-shadow: 2px 2px 0px rgb(37, 37, 37);
+      color: #fff;
+    }
+
+    .one img{
+      width: 100%;
+      height: 150px;
+      max-width: 100%;
+      display: block;
+      border-radius: 5px;
+    }
+    .one p{
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      margin-left:10px;
+      margin-right: 10px;
+    }
+    .game-description{
+      color: rgb(215, 219, 224);
+    }
+    .game-name{
+      color: #fff;
+      font-weight: 600;
+    }
+    .game{
+      color: rgb(215, 219, 224);
+    }
+
+.cta-section {
+  padding: 20px 20px;
+  text-align: center;
+  font-family: 'Press Start 2P', monospace;
+}
+
+.cta-content {
+  width: auto;
+  margin: auto;
+  /*background-color: rgba(0, 0, 0, 0.7);
+  padding: 30px;
+  border: 3px solid #fff;
+  border-radius: 16px;
+  box-shadow: 4px 4px #000;*/
+  font-size: 20px;
+  color: #FFD700;
+  text-shadow: 4px 4px #000;
+}
+
+.typewriter-text {
+  overflow: hidden;
+  white-space: nowrap;
+  display: inline-block;
+  animation: typing 4s steps(35, end) infinite alternate;
+  border: none; /* removed blinking bar */
+}
+
+.cta-subtitle {
+  margin-top: 20px;
+  font-size: clamp(14px, 3vw, 18px);
+  color: #fff;
+}
+
+/* Keyframes for continuous typing loop */
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.pixel-footer {
+  background-color: #0a0a23;
+  color: #fff;
+  text-align: center;
+  padding: 30px 20px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  border-top: 4px solid #FFD700;
+  position: relative;
+  bottom: 0;
+  width: auto;
+  margin-top: auto; /* This helps push the footer to the bottom */
+}
+
+.footer-content {
+  max-width: 800px;
+  margin: auto;
+}
+
+.social-icons img {
+  width: 40px;
+  height: 40px;
+  margin: 0 10px;
+  display: inline-block;
+  transition: transform 0.2s ease;
+  image-rendering: pixelated;
+}
+
+.social-icons img:hover {
+  transform: scale(1.1);
+}
+
+#heart{
+  height: 30px;
+  width:30px;
+}
+
+#footer-text{
+  margin-bottom: 30px;
+}
+
+.characters-box{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.5px;
+}
+.characters{
+  height: 110px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.content-wrapper {
+  flex: 1; /* This makes the content expand to push footer down */
+  padding-bottom: 20px; /* Add some space before footer */
+}
