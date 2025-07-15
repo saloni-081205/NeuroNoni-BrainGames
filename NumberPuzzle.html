@@ -28,6 +28,7 @@ All rights reserved. Unauthorized use or duplication is prohibited.
       font-size: 2em;
       margin: 20px;
       color: #e2f139;
+      margin-left: 70px;
       margin-bottom: 2px;
       text-shadow: 4px 4px #000;
     }
@@ -146,15 +147,19 @@ All rights reserved. Unauthorized use or duplication is prohibited.
       color: #FFD700;
     }
     .exit-btn {
-      position: absolute;
-      top: 20px;
+      height: 30px;
+      width: 10px;
+      position:absolute;
+      top: 10px;
       left: 20px;
       background-color: #e3ed1b;
       color: #000000;
-      box-shadow: none;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       transition: all 0.3s;
-      box-shadow: 0 0 0 1px #bfc816, 2px 2px 0 2px #e3a335;
+      box-shadow: 0 0 0 1px #bfc816,2px 2px 0 2px #e3a335;
     }
     .exit-btn:hover {
       background-color: #e9f663;
@@ -174,7 +179,7 @@ All rights reserved. Unauthorized use or duplication is prohibited.
 </head>
 <body>
   <!-- Exit Button to return to homepage -->
-  <button class="exit-btn" id="exit-btn">Exit</button>
+  <button class="exit-btn" id="exit-btn">X</button>
   
   <h1>Number Puzzle</h1>
   <img class="characters" src="images/rocket.gif">
